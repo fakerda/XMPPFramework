@@ -47,9 +47,10 @@
 
 - (nullable instancetype)initWithIQ:(XMPPIQ *)iq {
     NSParameterAssert(iq != nil);
-    NSXMLElement *slot = [iq elementForName:@"slot"];
-    NSXMLElement *putElement = [slot elementForName:@"put"];
-    NSXMLElement *getElement = [slot elementForName:@"get"];
+    NSString *uploadNamespace = @"urn:xmpp:http:upload:0";
+    NSXMLElement *slot = [iq elementForName:@"slot" xmlns:@"urn:xmpp:http:upload:0"];
+    NSXMLElement *putElement = [slot elementForName:@"put" xmlns:uploadNamespace];
+    NSXMLElement *getElement = [slot elementForName:@"get" xmlns:uploadNamespace];
     
     // Early versions of the spec didn't support headers
     // See https://xmpp.org/extensions/xep-0363.html
