@@ -99,7 +99,7 @@
         NSXMLElement *keyElement = [NSXMLElement elementWithName:@"key" stringValue:[obj.data base64EncodedStringWithOptions:0]];
         [keyElement addAttributeWithName:@"rid" unsignedIntegerValue:obj.deviceId];
         if (obj.isPreKey) {
-            [keyElement addAttributeWithName:@"prekey" stringValue:@"true"];
+            [keyElement addAttributeWithName:@"prekey" stringValue:@"1"];
         }
         [headerElement addChild:keyElement];
     }];
