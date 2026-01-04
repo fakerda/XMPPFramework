@@ -61,6 +61,12 @@
     XMPPMessage *messageElement = [XMPPMessage messageWithType:@"chat" to:toJID elementID:elementId];
     [messageElement addStorageHint:XMPPMessageStorageStore];
     [messageElement addChild:encryptedElement];
+        
+    // 🔧 添加 XEP-0380 显式消息加密标签（让客户端知道这是 OMEMO 加密）
+    NSXMLElement *encryptionElement = [NSXMLElement elementWithName:@"encryption" xmlns:@"urn:xmpp:eme:0"];
+    [encryptionElement addAttributeWithName:@"name" stringValue:@"OMEMO"];
+    [encryptionElement addAttributeWithName:@"namespace" stringValue:[OMEMOModule xmlnsOMEMO:xmlNamespace]];
+    [messageElement addChild:encryptionElement];
     return messageElement;
 }
 
