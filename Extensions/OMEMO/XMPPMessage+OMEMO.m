@@ -58,6 +58,22 @@
         NSXMLElement *payloadElement = [NSXMLElement elementWithName:@"payload" stringValue:b64];
         [encryptedElement addChild:payloadElement];
     }
+     NSXMLElement *headerElement = [NSXMLElement elementWithName:@"header"];
+    [headerElement addAttributeWithName:@"sid" unsignedIntegerValue:senderDeviceId];
+    
+    NSXMLElement *ivElement = [NSXMLElement elementWithName:@"iv" stringValue:[iv base64EncodedStringWithOptions:0]];
+    [headerElement addChild:ivElement];
+    
+    [keyData enumerateObjectsUsingBlock:^(OMEMOKeyData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSXMLElement *keyElement = [NSXMLElement elementWithName:@"key" stringValue:[obj.data base64EncodedStringWithOptions:0]];
+        [keyElement addAttributeWithName:@"rid" unsignedIntegerValue:obj.deviceId];
+        if (obj.isPreKey) {
+            [keyElement addAttributeWithName:@"prekey" stringValue:@"1"];
+        }
+        [headerElement addChild:keyElement];
+    }];
+    [encryptedElement addChild:headerElement];
+    
     XMPPMessage *messageElement = [XMPPMessage messageWithType:@"chat" to:toJID elementID:elementId];
     [messageElement addStorageHint:XMPPMessageStorageStore];
     [messageElement addChild:encryptedElement];
